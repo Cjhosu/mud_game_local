@@ -46,7 +46,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV='/home/cjhosu/repos/mud_game/evenv'
+VIRTUAL_ENV='/home/choward/repos/mud_game_local/evenv'
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
