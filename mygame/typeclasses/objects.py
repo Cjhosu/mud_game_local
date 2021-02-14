@@ -186,4 +186,12 @@ class Armor(Object):
                 dropper.msg("You throw your equipped armor on the ground!")
                 dropper.db.slots["armor"] = None
 
+class Gold(Object):
+    value = 1
+    def at_get(self, getter):
+        gold_string = str(self).split(' ')
+        self.value = gold_string[0]
+        getter.db.gold += int(self.value)
+        self.delete()
+
 
