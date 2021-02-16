@@ -1,7 +1,6 @@
 from evennia import utils
 from world.helpers import equipped_check, get_num_dice, DiceRoll
 from world.rules.levels import XP
-from world.combat.death import Death
 import random
 
 class CombatHandler():
@@ -46,7 +45,7 @@ class CombatHandler():
                 damage_msg = resolve[1]
                 caller.location.msg_contents(damage_msg)
                 if target.db.health <= 0:
-                    dead = Death(target)
+                    target.at_death()
 
         else:
             caller.msg("You test your might... You attack the air with " + str(attack_weapon) +" for an attack score of " + str(attack_score))
@@ -98,7 +97,8 @@ class CombatHandler():
         return attack_score
 
     def get_defense_score(self, target):
-        caller = self.caller
+
+        # If the target is wearing armor it adds defense
         is_equipped = equipped_check(target, "armor")
         if is_equipped[0] == True:
             slots = target.db.slots
@@ -106,13 +106,14 @@ class CombatHandler():
         else:
             defense_bonus = 0
         defense_score = target.db.defense + defense_bonus
+
         return defense_score
 
     def resolve_attack(self, defense_score, attack_score, attack_weapon, target):
 
         dealt_damage = attack_score - defense_score
 
-        # If your stance is evasive or defensive you have a chance to avoid damage
+        # If the target's stance is evasive or defensive they have a chance to avoid damage
         stance = target.db.stance
         if stance in ("evasive", "defensive"):
             if stance == "evasive":
@@ -122,22 +123,29 @@ class CombatHandler():
                 defense = target.db.defense
                 stat = defense
 
+            # Stat values determine how many dice are rolled
             num_dice = get_num_dice(stat) or 1
+
+            # If a '1' is rolled target successfully blocks or dodges
             dice = DiceRoll(num_dice, pass_cond = [1])
             passed = dice.roll()[1]
 
             if passed == True and stance == "evasive":
                 dealt_damage = None
                 message = str(target) + " dodges and takes no damage!"
+
             elif passed == True and stance == "defensive":
                 dealt_damage = None
                 message = str(target) + " blocks and takes no damage!"
+
+        # Target didn't block or dodge and took damage
         if dealt_damage != None and dealt_damage > 0:
             xp = XP(self.caller, 30)
             message = str(self.caller) + " attacked "+ str(target) + " for " + str(dealt_damage)
             if not utils.inherits_from(self.caller, 'typeclasses.characters.NPC'):
                 message += " with " + str(attack_weapon)
 
+        # Target didn't block or dodge but didn't take damage
         elif dealt_damage != None and dealt_damage <= 0:
             message = str(target) + " shrugs off an attack from " + str(self.caller)
         return dealt_damage, message

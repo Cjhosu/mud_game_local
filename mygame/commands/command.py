@@ -5,6 +5,9 @@ from evennia.utils.create import create_object
 from evennia.utils import evtable
 from typeclasses.characters import Character, NPC
 from world.combat.combat import CombatHandler
+from world.helpers import display_prompt
+
+
 
 """
 Commands
@@ -35,9 +38,7 @@ class Command(BaseCommand):
     def at_post_cmd(self):
         super().at_post_cmd()
         caller = self.caller
-        prompt = "HP:%i/%i  Level:%i  XP:%i/%i" % (caller.db.health, caller.db.max_health, caller.db.level, caller.db.xp, caller.db.next_level_xp)
-        caller.msg(prompt=prompt)
-
+        display_prompt(caller)
     pass
 
 class CmdEquip(Command):

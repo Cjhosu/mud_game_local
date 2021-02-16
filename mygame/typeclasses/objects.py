@@ -189,9 +189,11 @@ class Armor(Object):
 class Gold(Object):
     value = 1
     def at_get(self, getter):
-        gold_string = str(self).split(' ')
-        self.value = gold_string[0]
-        getter.db.gold += int(self.value)
+        gold_string = self.name.split(' ')
+        try:
+            self.value = int(gold_string[0])
+        except:
+            pass
+        getter.db.gold += self.value
         self.delete()
-
 

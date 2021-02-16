@@ -1,5 +1,6 @@
 from evennia.utils import interactive
-
+from world.helpers import display_prompt
+from evennia import TICKER_HANDLER
 """
 Characters
 
@@ -47,6 +48,12 @@ class Character(DefaultCharacter):
         self.db.xp = 0
         self.db.next_level_xp = 100
         self.db.attr_points = 1
+        self.db.gold = 0
+        TICKER_HANDLER.add(10, self.at_prompt)
+
+    def at_prompt(self):
+        display_prompt(self)
+
 
     def at_after_move(self, source_loaction):
         """
@@ -57,6 +64,16 @@ class Character(DefaultCharacter):
         #self.execute_cmd('look')
         pass
 
+    @interactive
+    def at_death(self):
+        self.location.msg_contents(str(self)+ " has lost the will to live")
+        yield 3
+        self.msg("Re-Spawning you somewhere cozy")
+        yield 2
+        self.msg("Try to stay alive.")
+        yield 2
+        self.move_to(self.home, quiet = True)
+        self.db.health = self.db.max_health
 
 class NPC(Character):
 
@@ -66,6 +83,7 @@ class NPC(Character):
 
     @interactive
     def at_char_entered(self, character):
+        "Called only when a character enters a special room typeclass"
         if self.db.hostile:
             character.location.msg_contents(str(self) +' is giving you some serious side-eye')
             yield 20
