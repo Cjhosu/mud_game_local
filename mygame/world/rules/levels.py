@@ -51,11 +51,12 @@ def spend_points(caller):
     return text, options
 
 def parse_node(caller, raw_string):
-    if (raw_string) in ["strength", "dex", "magic", "defense", "health", "intel", "luck"]:
+    if (raw_string) in ["strength", "dex", "magic", "defense", "max_health", "intel", "luck"]:
         upgrade = caller.attributes.get(raw_string)
         caller.attributes.add(raw_string, upgrade + 1)
         caller.db.attr_points -= 1
+        caller.db.health = caller.db.max_health
         caller.msg("You have upgraded " + str(raw_string))
     else:
-        caller.msg("You tried to upgrade "+ str(raw_string) +" instead choose strength, dex, magic, defense, health, intel, or luck")
+        caller.msg("You tried to upgrade "+ str(raw_string) +" instead choose strength, dex, magic, defense, max_health, intel, or luck")
     return spend_points(caller)

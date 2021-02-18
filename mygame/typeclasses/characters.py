@@ -85,27 +85,27 @@ class NPC(Character):
     @interactive
     def at_char_entered(self, character):
 
-        "Called only when a character enters a special room typeclass"
+        #Called only when a character enters a special room typeclass
         if self.db.hostile:
             character.location.msg_contents(str(self) +' is giving you some serious side-eye')
 
-            "Give the player some time to react"
+            #Give the player some time to react
             yield random.randint(10,20)
 
-            "Attack if both parties are alive"
+            #Attack if both parties are alive
             while self.db.health > 0 and character.db.health > 0:
                 self.execute_cmd(f"+attack {character}")
 
-                "Randomize attack timing a bit"
+                #Randomize attack timing a bit
                 yield random.randint(10,20)
 
-        "Friendly NPCs just say whats up"
+        #Friendly NPCs just say whats up
         else:
             self.execute_cmd(f"say Greetings, {character}!")
 
     @interactive
     def at_death(self):
-    "Enemies dying is a bit different than player characters dying"
+    #Enemies dying is a bit different than player characters dying
 
         self.location.msg_contents(str(self)+ " has lost the will to live")
 
