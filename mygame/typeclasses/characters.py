@@ -1,7 +1,7 @@
 import random
 from evennia.utils import interactive
-from world.helpers import display_prompt
-from evennia import TICKER_HANDLER
+from world.helpers import display_prompt, drop_gold_pieces
+from evennia import TICKER_HANDLER, create_object
 """
 Characters
 
@@ -108,10 +108,18 @@ class NPC(Character):
     #Enemies dying is a bit different than player characters dying
 
         self.location.msg_contents(str(self)+ " has lost the will to live")
+        number = drop_gold_pieces()
+        loot = create_object(
+                typeclass = 'typeclasses.objects.Gold',
+                key = str(number) +' gold',
+                location = self.location)
+
+        loot.attributes.add('value', number)
+        self.location.msg_contents(str(self)+ " dropped " + str(loot))
 
         "Take the enemy out of play for 60 seconds"
         self.move_to(None, to_none = True)
-        yield 60
+        yield 30
 
         "Re-spawn them"
         self.move_to(self.home, quiet = True)

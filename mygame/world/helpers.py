@@ -78,3 +78,11 @@ def display_prompt(caller):
 
     prompt = "HP:%i/%i  Level:%i  XP:%i/%i  Gold:%i" % (health, max_health, level, xp, next_level_xp, gold)
     caller.msg(prompt=prompt)
+
+
+
+
+def drop_gold_pieces():
+    num_list = [1,2,3]
+    number = random.choices(num_list, weights=(4, 2, 1), k=1)
+    return number[0]
