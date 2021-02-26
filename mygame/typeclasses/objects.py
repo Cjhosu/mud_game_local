@@ -1,4 +1,5 @@
 from world.helpers import equipped_check
+from evennia.utils import interactive
 
 """
 Object
@@ -187,13 +188,78 @@ class Armor(Object):
                 dropper.db.slots["armor"] = None
 
 class Gold(Object):
-    value = 1
-    def at_get(self, getter):
-        gold_string = self.name.split(' ')
+    def at_object_creation(self):
+        gold_string = self.key.split(' ')
         try:
             self.value = int(gold_string[0])
         except:
-            pass
+            self.value = 1
+
+    def at_get(self, getter):
         getter.db.gold += self.value
         self.delete()
+
+class Potion(Object):
+
+    def at_object_creation(self):
+       self.attributes.add('value', 1)
+       pass
+
+
+    def drink(self, caller):
+        pot = AttrModHandler(self)
+        pot.apply(caller)
+        caller.msg("Drinking this affects your " + pot.stat)
+        self.delete()
+
+class AttrModHandler:
+    """
+    Some items, such as potions might affect you stats either for a duration or premanantly 
+    This handler determines the stat the should be affected.
+    Calling apply(caller) on this class should alter the db, status affects that wear off should revert.
+    """
+
+    desc_to_stat = {
+            "Healing" : "health",
+            "Might" : "strength"
+            }
+
+    desc_to_modifier = {
+            "Weak" : 0.1,
+            "Normal": 0.25,
+            "Strong" : 0.5
+            }
+
+    def __init__(self,item):
+
+        self.item = item
+        args = item.key.split(' ')
+
+        for k,v in self.desc_to_stat.items():
+            if k in args:
+                self.stat = v
+
+        for k,v in self.desc_to_modifier.items():
+            if k in args:
+                self.mod = v
+
+    @interactive
+    def apply(self, caller):
+
+        if self.item.is_typeclass('typeclasses.objects.Potion'):
+
+            if self.stat == "health":
+            # Healing potions are special as they should not exceed max_health
+                max_health = caller.db.max_health
+                current_health = caller.db.health
+                newval =  current_health + (max_health * self.mod)
+                if newval > max_health:
+                    caller.db.health = caller.db.max_health
+                else:
+                    caller.db.health = newval
+            else:
+                curval = caller.attributes.get(self.stat)
+                caller.attributes.add(self.stat, curval + (curval * self.mod))
+                yield 120
+                caller.attributes.add(self.stat, curval)
 
