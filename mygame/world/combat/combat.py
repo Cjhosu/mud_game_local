@@ -127,7 +127,7 @@ class CombatHandler():
             num_dice = get_num_dice(stat) or 1
 
             # If a '1' is rolled target successfully blocks or dodges
-            dice = DiceRoll(num_dice, pass_cond = [1])
+            dice = DiceRoll(num_dice, pass_cond = [20])
             passed = dice.roll()[1]
 
             if passed == True and stance == "evasive":

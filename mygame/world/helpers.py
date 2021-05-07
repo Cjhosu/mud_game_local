@@ -1,5 +1,9 @@
 import random
 
+#This class rolls any number of 12 sided dice
+#It takes an optional pass condition
+#If any of the results pass it returns true
+
 class DiceRoll:
     def __init__(self, dice, **kwargs):
         self.dice = dice
@@ -8,7 +12,7 @@ class DiceRoll:
         results = []
         pass_cond = self.pass_cond
         for die in range(0,self.dice):
-            die_result = random.randint(1,12)
+            die_result = random.randint(1,20)
             results.append(die_result)
             if pass_cond and die_result in pass_cond:
                 passed = True
@@ -19,11 +23,13 @@ class DiceRoll:
                 passed = None
         return(results, passed)
 
+
+#Using some stat we can add more dice increasing the odds of a pass
 def get_num_dice(stat):
     num_dice = 1
-    base = 110
-    while base < stat and num_dice < 10:
-        base += 10
+    base = 105
+    while base < stat and num_dice < 20:
+        base += 5
         num_dice +=1
     return num_dice
 
@@ -78,9 +84,6 @@ def display_prompt(caller):
 
     prompt = "HP:%i/%i  Level:%i  XP:%i/%i  Gold:%i" % (health, max_health, level, xp, next_level_xp, gold)
     caller.msg(prompt=prompt)
-
-
-
 
 def drop_gold_pieces():
     num_list = [1,2,3]
