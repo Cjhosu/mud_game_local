@@ -1,6 +1,6 @@
 import random
 
-#This class rolls any number of 12 sided dice
+#This class rolls any number of 20 sided dice
 #It takes an optional pass condition
 #If any of the results pass it returns true
 
