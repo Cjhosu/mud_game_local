@@ -90,14 +90,14 @@ class NPC(Character):
             character.location.msg_contents(str(self) +' is giving you some serious side-eye')
 
             #Give the player some time to react
-            yield random.randint(10,20)
+            yield random.randint(20,40)
 
             #Attack if both parties are alive
             while self.db.health > 0 and character.db.health > 0:
                 self.execute_cmd(f"+attack {character}")
 
                 #Randomize attack timing a bit
-                yield random.randint(10,20)
+                yield random.randint(10,30)
 
         #Friendly NPCs just say whats up
         else:
@@ -117,9 +117,9 @@ class NPC(Character):
         loot.attributes.add('value', number)
         self.location.msg_contents(str(self)+ " dropped " + str(loot))
 
-        "Take the enemy out of play for 60 seconds"
+        "Take the enemy out of play for 5 mins"
         self.move_to(None, to_none = True)
-        yield 60
+        yield 300
 
         "Re-spawn them"
         self.move_to(self.home, quiet = True)
