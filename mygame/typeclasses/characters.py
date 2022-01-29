@@ -50,6 +50,7 @@ class Character(DefaultCharacter):
         self.db.next_level_xp = 100
         self.db.attr_points = 1
         self.db.gold = 0
+        self.db.attack_attr = ''
         TICKER_HANDLER.add(10, self.at_prompt)
 
     def at_prompt(self):

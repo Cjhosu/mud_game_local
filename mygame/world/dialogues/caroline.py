@@ -84,6 +84,7 @@ def Ranger(caller):
     caller.db.dex *= 1.35
     caller.db.intel *= 1.2
     caller.db.luck *= 1.1
+    caller.db.attack_attr = 'dex'
     caller.msg("\n I can smell the woods on ya, not in a bad way mind you, just a faint musk!")
     return
 
@@ -93,6 +94,7 @@ def Warrior(caller):
     caller.db.dex *= 1.05
     caller.db.intel *= .60
     caller.db.luck *= 1.1
+    caller.db.attack_attr = 'strength'
     caller.msg("\n I should have been able to tell by the muscles!")
     return
 
@@ -102,6 +104,7 @@ def Mage(caller):
     caller.db.dex *= .75
     caller.db.intel *= 1.0
     caller.db.luck *= 1.1
+    caller.db.attack_attr = 'magic'
     caller.msg("\n Spells for days son!")
     return
 
@@ -111,6 +114,7 @@ def Druid(caller):
     caller.db.dex *= 1.05
     caller.db.intel *= 1.05
     caller.db.luck *= .90
+    caller.db.attack_attr = 'magic'
     caller.msg("\n Ah, Blessed be")
     return
 
@@ -120,6 +124,7 @@ def Rogue(caller):
     caller.db.dex *= 1.35
     caller.db.intel *= .95
     caller.db.luck *= 1.2
+    caller.db.attack_attr = 'dex'
     caller.msg("\n That's fine, try not to steal anything.")
     return
 
@@ -129,6 +134,7 @@ def Paladin(caller):
     caller.db.dex *= .85
     caller.db.intel *= .60
     caller.db.luck *= 1.0
+    caller.db.attack_attr = 'strength'
     caller.msg("\n I see you follow the righteous path")
     return
 

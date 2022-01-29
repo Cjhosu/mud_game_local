@@ -221,7 +221,8 @@ class AttrModHandler:
 
     desc_to_stat = {
             "Healing" : "health",
-            "Might" : "strength"
+            "Might" : "strength",
+            "Finesse" : "dex"
             }
 
     desc_to_modifier = {

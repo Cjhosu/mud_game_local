@@ -5,14 +5,6 @@ import random
 
 class CombatHandler():
     defense_score ={}
-    charclass_attack_attr_dict = {
-        "Ranger" : "dex",
-        "Warrior" : "strength",
-        "Mage" : "magic",
-        "Druid" : "magic",
-        "Rogue" : "dex",
-        "Paladin" : "strength"
-        }
 
     weapon_attack_attr_dict = {
             "sword" : "strength",
@@ -25,9 +17,11 @@ class CombatHandler():
     #If you have an equipped weapon attack with it...
     def init_combat(self, caller, target):
         attack_weapon = self.get_attack_weapon(caller)
-        attack_attr =  self.get_attack_attribute()
-        if not attack_attr:
+        if not caller.db.charclass:
+            caller.msg("You should pick a class before you go picking fights! (Talk to Caroline at Shieldmaiden's)")
             return
+        else:
+            attack_attr = caller.db.attack_attr
         init_attack_score = self.get_attack_score(attack_weapon,attack_attr)
         attack_score = round(random.uniform(1.0,1.5)* init_attack_score)
         if target:
@@ -58,16 +52,6 @@ class CombatHandler():
         else:
             attack_weapon = "your fists" 
         return attack_weapon
-
-    def get_attack_attribute(self):
-        caller = self.caller
-        charclass = caller.db.charclass
-        #find your favored attribute based on your class
-        if not charclass:
-            caller.msg("You should pick a class before you go picking fights! (Talk to Caroline at Shieldmaiden's)")
-        else:
-            attack_attr = self.charclass_attack_attr_dict[charclass]
-            return attack_attr
 
     #Your weapon will do more for you if you know how to use it
     def weapon_multiplier(self,weapon, attack_attr):
